@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة علاقات العملاء - CRM</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/themes.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👥</text></svg>">
+</head>
+<body class="theme-light" data-lang="ar">
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <span class="nav-logo">👥</span>
+            <span class="nav-title">CRM System</span>
+        </div>
+        <div class="nav-menu">
+            <a href="#" class="nav-link active" data-page="dashboard">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-text">لوحة التحكم</span>
+            </a>
+            <a href="#" class="nav-link" data-page="customers">
+                <span class="nav-icon">👥</span>
+                <span class="nav-text">العملاء</span>
+            </a>
+            <a href="#" class="nav-link" data-page="products">
+                <span class="nav-icon">📦</span>
+                <span class="nav-text">المنتجات</span>
+            </a>
+            <a href="#" class="nav-link" data-page="orders">
+                <span class="nav-icon">🛒</span>
+                <span class="nav-text">الطلبات</span>
+            </a>
+            <a href="#" class="nav-link" data-page="tasks">
+                <span class="nav-icon">📋</span>
+                <span class="nav-text">المهام</span>
+            </a>
+            <a href="#" class="nav-link" data-page="chat">
+                <span class="nav-icon">💬</span>
+                <span class="nav-text">المحادثة</span>
+            </a>
+            <a href="#" class="nav-link" data-page="notifications">
+                <span class="nav-icon">🔔</span>
+                <span class="nav-text">الإشعارات</span>
+                <span class="notification-badge" id="notificationCount">0</span>
+            </a>
+            <a href="#" class="nav-link" data-page="reports">
+                <span class="nav-icon">📊</span>
+                <span class="nav-text">التقارير</span>
+            </a>
+            <a href="#" class="nav-link" data-page="users" id="usersNavLink" style="display: none;">
+                <span class="nav-icon">👤</span>
+                <span class="nav-text">المستخدمين</span>
+            </a>
+            <a href="#" class="nav-link" data-page="settings">
+                <span class="nav-icon">⚙️</span>
+                <span class="nav-text">الإعدادات</span>
+            </a>
+        </div>
+        <div class="nav-user">
+            <button class="user-menu-btn" id="userMenuBtn">
+                <span id="currentUserName">System Administrator</span>
+                <span class="dropdown-arrow">▼</span>
+            </button>
+            <div class="user-menu" id="userMenu">
+                <a href="#" id="logoutBtn">تسجيل الخروج</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Login Page -->
+        <div id="loginPage" class="page active">
+            <div class="login-container">
+                <div class="login-card">
+                    <div class="login-header">
+                        <div class="login-logo">👥</div>
+                        <h1>نظام إدارة علاقات العملاء</h1>
+                        <p>تسجيل الدخول إلى حسابك</p>
+                    </div>
+                    <form id="loginForm" class="login-form">
+                        <div class="form-group">
+                            <label for="username">اسم المستخدم</label>
+                            <input type="text" id="username" name="username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">كلمة المرور</label>
+                            <input type="password" id="password" name="password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <span>تسجيل الدخول</span>
+                            <span class="btn-icon">🔑</span>
+                        </button>
+                    </form>
+                    <div class="login-footer">
+                        <button class="btn btn-secondary" id="languageToggle">English</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Page -->
+        <div id="dashboardPage" class="page">
+            <div class="page-header">
+                <h1>لوحة التحكم</h1>
+                <p>نظرة عامة على النظام</p>
+            </div>
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-content">
+                        <h3 id="totalCustomers">0</h3>
+                        <p>إجمالي العملاء</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📦</div>
+                    <div class="stat-content">
+                        <h3 id="totalProducts">0</h3>
+                        <p>إجمالي المنتجات</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🛒</div>
+                    <div class="stat-content">
+                        <h3 id="totalOrders">0</h3>
+                        <p>إجمالي الطلبات</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-content">
+                        <h3 id="totalRevenue">0</h3>
+                        <p>إجمالي الإيرادات</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⚠️</div>
+                    <div class="stat-content">
+                        <h3 id="pendingTasks">0</h3>
+                        <p>المهام المعلقة</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⏰</div>
+                    <div class="stat-content">
+                        <h3 id="inProgressTasks">0</h3>
+                        <p>المهام قيد التنفيذ</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-content">
+                        <h3 id="completedTasks">0</h3>
+                        <p>المهام المكتملة</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📋</div>
+                    <div class="stat-content">
+                        <h3 id="totalTasks">0</h3>
+                        <p>إجمالي المهام</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="dashboard-sections">
+                <div class="section">
+                    <h2>المهام الحديثة</h2>
+                    <div id="recentTasks" class="recent-items"></div>
+                </div>
+                <div class="section">
+                    <h2>الطلبات الحديثة</h2>
+                    <div id="recentOrders" class="recent-items"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Customers Page -->
+        <div id="customersPage" class="page">
+            <div class="page-header">
+                <h1>إدارة العملاء</h1>
+                <button class="btn btn-primary" id="addCustomerBtn">
+                    <span>إضافة عميل جديد</span>
+                    <span class="btn-icon">➕</span>
+                </button>
+            </div>
+            <div class="page-filters">
+                <input type="text" id="customerSearch" placeholder="البحث في العملاء..." class="search-input">
+                <button class="btn btn-secondary" id="resetCustomerFilters">إعادة تعيين</button>
+            </div>
+            <div class="table-container">
+                <table class="data-table" id="customersTable">
+                    <thead>
+                        <tr>
+                            <th>الاسم</th>
+                            <th>البريد الإلكتروني</th>
+                            <th>الهاتف</th>
+                            <th>الشركة</th>
+                            <th>إجمالي الطلبات</th>
+                            <th>إجمالي المبلغ</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="pagination" id="customersPagination"></div>
+        </div>
+
+        <!-- Products Page -->
+        <div id="productsPage" class="page">
+            <div class="page-header">
+                <h1>إدارة المنتجات والمخزون</h1>
+                <button class="btn btn-primary" id="addProductBtn">
+                    <span>إضافة منتج جديد</span>
+                    <span class="btn-icon">➕</span>
+                </button>
+            </div>
+            <div class="page-filters">
+                <input type="text" id="productSearch" placeholder="البحث في المنتجات..." class="search-input">
+                <select id="categoryFilter" class="filter-select">
+                    <option value="">جميع الفئات</option>
+                </select>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="lowStockFilter">
+                    <span>المخزون المنخفض فقط</span>
+                </label>
+                <button class="btn btn-secondary" id="resetProductFilters">إعادة تعيين</button>
+            </div>
+            <div class="table-container">
+                <table class="data-table" id="productsTable">
+                    <thead>
+                        <tr>
+                            <th>الاسم</th>
+                            <th>الفئة</th>
+                            <th>السعر</th>
+                            <th>الكمية المتوفرة</th>
+                            <th>رمز المنتج</th>
+                            <th>الحالة</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="pagination" id="productsPagination"></div>
+        </div>
+
+        <!-- Orders Page -->
+        <div id="ordersPage" class="page">
+            <div class="page-header">
+                <h1>إدارة الطلبات</h1>
+                <button class="btn btn-primary" id="addOrderBtn">
+                    <span>إنشاء طلب جديد</span>
+                    <span class="btn-icon">➕</span>
+                </button>
+            </div>
+            <div class="page-filters">
+                <select id="orderStatusFilter" class="filter-select">
+                    <option value="">جميع الحالات</option>
+                    <option value="pending">معلق</option>
+                    <option value="processing">قيد المعالجة</option>
+                    <option value="shipped">تم الشحن</option>
+                    <option value="completed">مكتمل</option>
+                    <option value="cancelled">ملغى</option>
+                </select>
+                <select id="orderCustomerFilter" class="filter-select">
+                    <option value="">جميع العملاء</option>
+                </select>
+                <button class="btn btn-secondary" id="resetOrderFilters">إعادة تعيين</button>
+            </div>
+            <div class="table-container">
+                <table class="data-table" id="ordersTable">
+                    <thead>
+                        <tr>
+                            <th>رقم الطلب</th>
+                            <th>العميل</th>
+                            <th>تاريخ الطلب</th>
+                            <th>المبلغ الإجمالي</th>
+                            <th>الحالة</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="pagination" id="ordersPagination"></div>
+        </div>
+
+        <!-- Chat Page -->
+        <div id="chatPage" class="page">
+            <div class="chat-container">
+                <div class="chat-sidebar">
+                    <div class="chat-header">
+                        <h2>المحادثات</h2>
+                        <button class="btn btn-primary btn-sm" id="newChatBtn">محادثة جديدة</button>
+                    </div>
+                    <div class="chat-tabs">
+                        <button class="chat-tab active" data-tab="direct">مباشرة</button>
+                        <button class="chat-tab" data-tab="groups">مجموعات</button>
+                    </div>
+                    <div class="chat-list" id="directChatList"></div>
+                    <div class="chat-list" id="groupChatList" style="display: none;"></div>
+                </div>
+                <div class="chat-main">
+                    <div class="chat-welcome">
+                        <h3>مرحباً بك في نظام المحادثة</h3>
+                        <p>اختر محادثة من القائمة للبدء</p>
+                    </div>
+                    <div class="chat-conversation" id="chatConversation" style="display: none;">
+                        <div class="chat-conversation-header" id="chatHeader"></div>
+                        <div class="chat-messages" id="chatMessages"></div>
+                        <div class="chat-input-container">
+                            <input type="text" id="chatInput" placeholder="اكتب رسالتك هنا..." class="chat-input">
+                            <button class="btn btn-primary" id="sendMessageBtn">إرسال</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Users Page -->
+        <div id="usersPage" class="page">
+            <div class="page-header">
+                <h1>إدارة المستخدمين</h1>
+                <button class="btn btn-primary" id="addUserBtn">
+                    <span>إضافة مستخدم جديد</span>
+                    <span class="btn-icon">➕</span>
+                </button>
+            </div>
+            <div class="page-filters">
+                <input type="text" id="userSearch" placeholder="البحث في المستخدمين..." class="search-input">
+                <select id="roleFilter" class="filter-select">
+                    <option value="">جميع الأدوار</option>
+                </select>
+                <button class="btn btn-secondary" id="resetUserFilters">إعادة تعيين</button>
+            </div>
+            <div class="table-container">
+                <table class="data-table" id="usersTable">
+                    <thead>
+                        <tr>
+                            <th>الاسم الكامل</th>
+                            <th>اسم المستخدم</th>
+                            <th>البريد الإلكتروني</th>
+                            <th>الدور</th>
+                            <th>الحالة</th>
+                            <th>المهام المسندة</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="pagination" id="usersPagination"></div>
+        </div>
+
+        <!-- Tasks Page (Updated) -->
+        <div id="tasksPage" class="page">
+            <div class="page-header">
+                <h1>إدارة المهام</h1>
+                <button class="btn btn-primary" id="addTaskBtn">
+                    <span>إضافة مهمة جديدة</span>
+                    <span class="btn-icon">➕</span>
+                </button>
+            </div>
+            <div class="page-filters">
+                <input type="text" id="taskSearch" placeholder="البحث في المهام..." class="search-input">
+                <select id="statusFilter" class="filter-select">
+                    <option value="">جميع الحالات</option>
+                    <option value="pending">معلقة</option>
+                    <option value="in_progress">قيد التنفيذ</option>
+                    <option value="completed">مكتملة</option>
+                    <option value="on_hold">معلقة مؤقتاً</option>
+                </select>
+                <select id="priorityFilter" class="filter-select">
+                    <option value="">جميع الأولويات</option>
+                    <option value="low">منخفضة</option>
+                    <option value="medium">متوسطة</option>
+                    <option value="high">عالية</option>
+                    <option value="urgent">عاجلة</option>
+                </select>
+                <select id="assigneeFilter" class="filter-select">
+                    <option value="">جميع المسندين</option>
+                </select>
+                <button class="btn btn-secondary" id="resetFilters">إعادة تعيين</button>
+            </div>
+            <div class="table-container">
+                <table class="data-table" id="tasksTable">
+                    <thead>
+                        <tr>
+                            <th>العنوان</th>
+                            <th>الحالة</th>
+                            <th>الأولوية</th>
+                            <th>المسند إليه</th>
+                            <th>العميل</th>
+                            <th>تاريخ الاستحقاق</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="pagination" id="tasksPagination"></div>
+        </div>
+
+        <!-- Notifications Page -->
+        <div id="notificationsPage" class="page">
+            <div class="page-header">
+                <h1>الإشعارات</h1>
+                <button class="btn btn-secondary" id="markAllReadBtn">تمييز الكل كمقروء</button>
+                <button class="btn btn-danger" id="deleteReadBtn">حذف المقروءة</button>
+            </div>
+            <div class="notifications-container" id="notificationsList"></div>
+        </div>
+
+        <!-- Reports Page -->
+        <div id="reportsPage" class="page">
+            <div class="page-header">
+                <h1>التقارير والإحصائيات</h1>
+            </div>
+            <div class="reports-filters">
+                <div class="form-group">
+                    <label for="reportType">نوع التقرير:</label>
+                    <select id="reportType" class="form-control">
+                        <option value="tasks">ملخص المهام</option>
+                        <option value="orders">ملخص الطلبات</option>
+                        <option value="customers">ملخص العملاء</option>
+                        <option value="products">ملخص المنتجات</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="dateFrom">من تاريخ:</label>
+                    <input type="date" id="dateFrom" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="dateTo">إلى تاريخ:</label>
+                    <input type="date" id="dateTo" class="form-control">
+                </div>
+                <button class="btn btn-primary" id="exportCsvBtn">
+                    <span>تصدير CSV</span>
+                    <span class="btn-icon">📊</span>
+                </button>
+            </div>
+            <div class="charts-container">
+                <div class="chart-section">
+                    <h3>المهام حسب الحالة</h3>
+                    <canvas id="tasksStatusChart"></canvas>
+                </div>
+                <div class="chart-section">
+                    <h3>المهام حسب الأولوية</h3>
+                    <canvas id="tasksPriorityChart"></canvas>
+                </div>
+                <div class="chart-section">
+                    <h3>الطلبات حسب الحالة</h3>
+                    <canvas id="ordersStatusChart"></canvas>
+                </div>
+                <div class="chart-section">
+                    <h3>الإيرادات الشهرية</h3>
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Page -->
+        <div id="settingsPage" class="page">
+            <div class="page-header">
+                <h1>الإعدادات</h1>
+            </div>
+            <div class="settings-container">
+                <div class="form-group">
+                    <label for="languageSelect">اللغة:</label>
+                    <select id="languageSelect" class="form-control">
+                        <option value="ar">العربية</option>
+                        <option value="en">English</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="themeSelect">السمة:</label>
+                    <select id="themeSelect" class="form-control">
+                        <option value="light">فاتح</option>
+                        <option value="dark">داكن</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="companyName">اسم الشركة:</label>
+                    <input type="text" id="companyName" class="form-control" placeholder="اسم الشركة">
+                </div>
+                <div class="form-group">
+                    <label for="currency">العملة:</label>
+                    <select id="currency" class="form-control">
+                        <option value="SAR">ريال سعودي (SAR)</option>
+                        <option value="USD">دولار أمريكي (USD)</option>
+                        <option value="EUR">يورو (EUR)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="lowStockThreshold">حد تنبيه المخزون المنخفض:</label>
+                    <input type="number" id="lowStockThreshold" class="form-control" min="1" value="10">
+                </div>
+                <button class="btn btn-primary" id="saveSettingsBtn">
+                    <span>حفظ الإعدادات</span>
+                    <span class="btn-icon">💾</span>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modals -->
+    <!-- Customer Modal -->
+    <div id="customerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="customerModalTitle">إضافة عميل جديد</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form id="customerForm" class="modal-form">
+                <div class="form-group">
+                    <label for="customerName">الاسم *</label>
+                    <input type="text" id="customerName" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="customerEmail">البريد الإلكتروني</label>
+                    <input type="email" id="customerEmail" name="email">
+                </div>
+                <div class="form-group">
+                    <label for="customerPhone">الهاتف</label>
+                    <input type="tel" id="customerPhone" name="phone">
+                </div>
+                <div class="form-group">
+                    <label for="customerCompany">الشركة</label>
+                    <input type="text" id="customerCompany" name="company">
+                </div>
+                <div class="form-group">
+                    <label for="customerAddress">العنوان</label>
+                    <textarea id="customerAddress" name="address" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="customerNotes">ملاحظات</label>
+                    <textarea id="customerNotes" name="notes" rows="3"></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn btn-primary">حفظ</button>
+                    <button type="button" class="btn btn-secondary modal-cancel">إلغاء</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Product Modal -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="productModalTitle">إضافة منتج جديد</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form id="productForm" class="modal-form">
+                <div class="form-group">
+                    <label for="productName">اسم المنتج *</label>
+                    <input type="text" id="productName" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="productDescription">الوصف</label>
+                    <textarea id="productDescription" name="description" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="productPrice">السعر *</label>
+                    <input type="number" id="productPrice" name="price" step="0.01" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="productStock">الكمية المتوفرة</label>
+                    <input type="number" id="productStock" name="stock_quantity" min="0" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="productSku">رمز المنتج</label>
+                    <input type="text" id="productSku" name="sku">
+                </div>
+                <div class="form-group">
+                    <label for="productCategory">الفئة</label>
+                    <input type="text" id="productCategory" name="category">
+                </div>
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="productActive" name="is_active" checked>
+                        <span>نشط</span>
+                    </label>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn btn-primary">حفظ</button>
+                    <button type="button" class="btn btn-secondary modal-cancel">إلغاء</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Order Modal -->
+    <div id="orderModal" class="modal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h2 id="orderModalTitle">إنشاء طلب جديد</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form id="orderForm" class="modal-form">
+                <div class="form-group">
+                    <label for="orderCustomer">العميل *</label>
+                    <select id="orderCustomer" name="customer_id" required>
+                        <option value="">اختر العميل</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="orderStatus">الحالة</label>
+                    <select id="orderStatus" name="status">
+                        <option value="pending">معلق</option>
+                        <option value="processing">قيد المعالجة</option>
+                        <option value="shipped">تم الشحن</option>
+                        <option value="completed">مكتمل</option>
+                        <option value="cancelled">ملغى</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="orderNotes">ملاحظات</label>
+                    <textarea id="orderNotes" name="notes" rows="3"></textarea>
+                </div>
+                
+                <h3>عناصر الطلب</h3>
+                <div class="order-items-container">
+                    <div class="order-item-header">
+                        <button type="button" class="btn btn-secondary" id="addOrderItemBtn">إضافة منتج</button>
+                    </div>
+                    <div id="orderItemsList"></div>
+                    <div class="order-total">
+                        <strong>المجموع: <span id="orderTotalAmount">0.00</span></strong>
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="submit" class="btn btn-primary">حفظ الطلب</button>
+                    <button type="button" class="btn btn-secondary modal-cancel">إلغاء</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- User Modal -->
+    <div id="userModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="userModalTitle">إضافة مستخدم جديد</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form id="userForm" class="modal-form">
+                <div class="form-group">
+                    <label for="userUsername">اسم المستخدم *</label>
+                    <input type="text" id="userUsername" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="userFullName">الاسم الكامل *</label>
+                    <input type="text" id="userFullName" name="full_name" required>
+                </div>
+                <div class="form-group">
+                    <label for="userEmail">البريد الإلكتروني *</label>
+                    <input type="email" id="userEmail" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="userPassword">كلمة المرور *</label>
+                    <input type="password" id="userPassword" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label for="userRole">الدور</label>
+                    <select id="userRole" name="role">
+                        <option value="employee">موظف</option>
+                        <option value="sales">موظف مبيعات</option>
+                        <option value="support">دعم فني</option>
+                        <option value="manager">مدير</option>
+                        <option value="admin">مدير النظام</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="userActive" name="is_active" checked>
+                        <span>نشط</span>
+                    </label>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn btn-primary">حفظ</button>
+                    <button type="button" class="btn btn-secondary modal-cancel">إلغاء</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Task Modal (Updated) -->
+    <div id="taskModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="taskModalTitle">إضافة مهمة جديدة</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form id="taskForm" class="modal-form">
+                <div class="form-group">
+                    <label for="taskTitle">العنوان *</label>
+                    <input type="text" id="taskTitle" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="taskDescription">الوصف</label>
+                    <textarea id="taskDescription" name="description" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="taskStatus">الحالة</label>
+                    <select id="taskStatus" name="status">
+                        <option value="pending">معلقة</option>
+                        <option value="in_progress">قيد التنفيذ</option>
+                        <option value="completed">مكتملة</option>
+                        <option value="on_hold">معلقة مؤقتاً</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="taskPriority">الأولوية</label>
+                    <select id="taskPriority" name="priority">
+                        <option value="low">منخفضة</option>
+                        <option value="medium">متوسطة</option>
+                        <option value="high">عالية</option>
+                        <option value="urgent">عاجلة</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="taskAssignee">المسند إليه</label>
+                    <select id="taskAssignee" name="assigned_to">
+                        <option value="">غير مسند</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="taskCustomer">العميل</label>
+                    <select id="taskCustomer" name="customer_id">
+                        <option value="">غير مرتبط بعميل</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="taskDueDate">تاريخ الاستحقاق</label>
+                    <input type="datetime-local" id="taskDueDate" name="due_date">
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn btn-primary">حفظ</button>
+                    <button type="button" class="btn btn-secondary modal-cancel">إلغاء</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- New Chat Modal -->
+    <div id="newChatModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>محادثة جديدة</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-form">
+                <div class="chat-type-tabs">
+                    <button type="button" class="btn btn-secondary active" data-type="direct">محادثة مباشرة</button>
+                    <button type="button" class="btn btn-secondary" data-type="group">مجموعة جديدة</button>
+                </div>
+                
+                <div id="directChatForm" class="chat-form">
+                    <div class="form-group">
+                        <label>اختر المستخدم:</label>
+                        <select id="directChatUser" class="form-control">
+                            <option value="">اختر مستخدم</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="groupChatForm" class="chat-form" style="display: none;">
+                    <div class="form-group">
+                        <label for="groupName">اسم المجموعة:</label>
+                        <input type="text" id="groupName" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="groupDescription">الوصف:</label>
+                        <textarea id="groupDescription" class="form-control" rows="2"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>الأعضاء:</label>
+                        <div id="groupMembersList" class="members-list"></div>
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-primary" id="startChatBtn">بدء المحادثة</button>
+                    <button type="button" class="btn btn-secondary modal-cancel">إلغاء</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/customers.js"></script>
+    <script src="js/products.js"></script>
+    <script src="js/orders.js"></script>
+    <script src="js/users.js"></script>
+    <script src="js/chat.js"></script>
+    <script src="js/tasks.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
+
