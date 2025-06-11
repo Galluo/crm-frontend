@@ -1,5 +1,5 @@
 // API Configuration
-const API_BASE_URL = '/api';
+const API_BASE_URL = 'https://crm-backend-om3t.onrender.com/api';
 
 // API Helper Functions
 class API {
